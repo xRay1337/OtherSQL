@@ -41,7 +41,14 @@ CREATE TABLE Dim.Formats
 (
 	FormatId	INT IDENTITY(1, 1)	NOT NULL,
 	FormatName	NVARCHAR(8)			NOT NULL,
-	CONSTRAINT PkFormats PRIMARY KEY (FormatId)
+	CONSTRAINT PkFormatsFormatId PRIMARY KEY (FormatId)
+)
+
+CREATE TABLE Dim.Products
+(
+	ProductId	INT IDENTITY(1, 1)	NOT NULL,
+	ProductName	NVARCHAR(64)		NOT NULL,
+	CONSTRAINT PkProductsProductId PRIMARY KEY (ProductId)
 )
 
 CREATE TABLE Sales.Orders
@@ -65,8 +72,10 @@ CREATE TABLE Sales.OrderDetails
 (
 	OrderId		INT				NOT NULL,
 	OrderLineId	INT				NOT NULL,
+	ProductId	INT				NOT NULL,
 	Unit		NVARCHAR(8)		NOT NULL,
 	Quantity	INT				NOT NULL,
 	CONSTRAINT PkOrderDetailsOrderIdOrderLineId	PRIMARY KEY (OrderId, OrderLineId),
-	CONSTRAINT FkOrderDetailsOrderId			FOREIGN KEY (OrderId) REFERENCES Sales.Orders(OrderId)
+	CONSTRAINT FkOrderDetailsOrderId			FOREIGN KEY (OrderId) REFERENCES Sales.Orders(OrderId),
+	CONSTRAINT FkOrderDetailsProductId			FOREIGN KEY (ProductId) REFERENCES Dim.Products(ProductId)
 )

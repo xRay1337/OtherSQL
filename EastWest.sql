@@ -51,6 +51,24 @@ CREATE TABLE Dim.Products
 	CONSTRAINT PkProductsProductId PRIMARY KEY (ProductId)
 )
 
+CREATE TABLE Dim.Units
+(
+	UnitId		INT IDENTITY(1, 1)	NOT NULL,
+	UnitName	NVARCHAR(64)	NOT NULL,
+	CONSTRAINT PkProductsUnitId PRIMARY KEY (UnitId)
+)
+
+CREATE TABLE Dim.ProductsUnits
+(
+	ProductUnitId	INT IDENTITY(1, 1)	NOT NULL,
+	ProductId		INT NOT NULL,
+	UnitId			INT NOT NULL,
+	CONSTRAINT PkProductsProductUnitId		PRIMARY KEY (ProductUnitId),
+	CONSTRAINT FkProductsUnitsProductId		FOREIGN KEY (ProductId) REFERENCES Dim.Products(ProductId),
+	CONSTRAINT FkProductsUnitsUnitId		FOREIGN KEY (UnitId)	REFERENCES Dim.Units(UnitId),
+	CONSTRAINT UniqueProductIdUnitId		UNIQUE (ProductId, UnitId)
+)
+
 CREATE TABLE Sales.Orders
 (
 	OrderId				INT IDENTITY(1, 1)	NOT NULL,
@@ -70,12 +88,11 @@ CREATE TABLE Sales.Orders
 
 CREATE TABLE Sales.OrderDetails
 (
-	OrderId		INT				NOT NULL,
-	OrderLineId	INT				NOT NULL,
-	ProductId	INT				NOT NULL,
-	Unit		NVARCHAR(8)		NOT NULL,
-	Quantity	INT				NOT NULL,
+	OrderId			INT	NOT NULL,
+	OrderLineId		INT	NOT NULL,
+	ProductUnitId	INT	NOT NULL,
+	Quantity		INT	NOT NULL,
 	CONSTRAINT PkOrderDetailsOrderIdOrderLineId	PRIMARY KEY (OrderId, OrderLineId),
-	CONSTRAINT FkOrderDetailsOrderId			FOREIGN KEY (OrderId) REFERENCES Sales.Orders(OrderId),
-	CONSTRAINT FkOrderDetailsProductId			FOREIGN KEY (ProductId) REFERENCES Dim.Products(ProductId)
+	CONSTRAINT FkOrderDetailsOrderId			FOREIGN KEY (OrderId)		REFERENCES Sales.Orders(OrderId),
+	CONSTRAINT FkOrderDetailsProductIdUnitId	FOREIGN KEY (ProductUnitId) REFERENCES Dim.ProductsUnits(ProductUnitId)
 )

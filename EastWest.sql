@@ -88,11 +88,12 @@ CREATE TABLE Sales.Orders
 
 CREATE TABLE Sales.OrderDetails
 (
+	OrderDetailId	INT IDENTITY(1, 1)	NOT NULL,
 	OrderId			INT	NOT NULL,
 	OrderLineId		INT	NOT NULL,
 	ProductUnitId	INT	NOT NULL,
 	Quantity		INT	NOT NULL,
-	CONSTRAINT PkOrderDetailsOrderIdOrderLineId	PRIMARY KEY (OrderId, OrderLineId),
+	CONSTRAINT PkOrderDetailsOrderIdOrderLineId	PRIMARY KEY (OrderDetailId),
 	CONSTRAINT FkOrderDetailsOrderId			FOREIGN KEY (OrderId)		REFERENCES Sales.Orders(OrderId),
 	CONSTRAINT FkOrderDetailsProductIdUnitId	FOREIGN KEY (ProductUnitId) REFERENCES Dim.ProductsUnits(ProductUnitId)
 )
